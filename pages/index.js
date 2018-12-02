@@ -8,10 +8,4 @@ const Home = (props) => (
   </Layout>
 );
 
-Home.getInitialProps = async function(ctx) {
-  const { token } = Cookie(ctx);
-
-  return { token };
-}
-
 export default Home
