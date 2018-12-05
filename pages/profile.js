@@ -1,10 +1,15 @@
-import { Component } from 'react'
 import fetch from 'isomorphic-unfetch'
 import Layout from '../components/layout'
 import auth, { withAuthSync }  from '../utils/auth'
 
 const Profile = withAuthSync((props) => {
-  const { name, login, bio, avatar_url } = props.data
+  const {
+    name,
+    login,
+    bio,
+    avatar_url // eslint-disable-line
+  } = props.data
+
   return (
     <Layout>
       <img src={avatar_url} alt="Avatar"/>
