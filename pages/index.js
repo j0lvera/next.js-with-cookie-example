@@ -1,5 +1,4 @@
 import React from 'react'
-import Cookie from 'next-cookies'
 import Layout from '../components/layout';
 
 const Home = (props) => (

@@ -40,7 +40,7 @@ In this example, we authenticate users and store a token in a cookie. The exampl
 
 This example is backend agnostic and uses `isomorphic-fetch` to do the API calls.
 
-We use a simple passwordless backend (https://with-cookie-api.now.sh) that logs the user in with their GitHub username.
+We use a simple passwordless backend (https://with-cookie-api.now.sh) that logs the user in with their GitHub username. This backend only allows requests from http://localhost:3000
 
 Session is syncronized across tabs. This means if you logout once, your session gets logged out on all the windows. For this we use a HOC called `withAuthSync`.
 
