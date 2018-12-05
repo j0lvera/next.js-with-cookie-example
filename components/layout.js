@@ -1,63 +1,42 @@
-import React from 'react';
+import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { logout } from '../utils/auth';
+import Header from './header'
 
 const Layout = props => (
   <React.Fragment>
     <Head>
       <title>With Cookies</title>
     </Head>
-
-    <React.Fragment>
-      <header>
-        <nav>
-          <ul>
-            <li><Link prefetch href="/"><a>Home</a></Link></li>
-            <li><Link href="/login"><a>Login</a></Link></li>
-            <li><Link href="/profile"><a>Profile</a></Link></li>
-            <li><button onClick={logout}>Logout</button></li>
-          </ul>
-        </nav>
-      </header>
-
-      <main>{props.children}</main>
-
-      <footer>
-        Lorem Ipsum dolor
-      </footer>
-    </React.Fragment>
-    <style jsx>{`
-      main {
-        margin: 2em;
-        padding: 2em;
-        border: 1px solid #ccc;
+    <style jsx global>{`
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
       }
 
-      ul {
-          display: flex;
-          list-style: none;
-          margin-left: 0;
-          padding-left: 0;
+      body {
+        margin: 0;
+        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
       }
 
-      li:first-child {
-          margin-left: auto;
-      }
-
-      li {
-          margin-right: 1em;
-      }
-
-      a {
-          text-decoration: none;
-          color: blue;
-      }
-
-      a:hover {
-          opacity: .8;
+      .container {
+        max-width: 65rem;
+        margin: 1.5rem auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
     `}</style>
+    <React.Fragment>
+      <Header />
+
+      <main>
+        <div className="container">
+          {props.children}
+        </div>
+      </main>
+    </React.Fragment>
   </React.Fragment>
 )
 

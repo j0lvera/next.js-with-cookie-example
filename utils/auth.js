@@ -6,14 +6,12 @@ import fetch from 'isomorphic-unfetch'
 
 export const login = async ({ username }) => {
   try {
-    const url = 'https://moor-crush.glitch.me/login';
-    // const url = 'https://with-cookie-api.now.sh/login';
+    const url = 'https://with-cookie-api.now.sh/login';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username }),
     });
-
     if (response.ok) {
       const { token } = await response.json()
       cookie.set('token', token, { expires: 1 })
@@ -43,18 +41,18 @@ export function withAuthSync(WrappedComponent) {
     constructor(props) {
       super(props)
 
-      this.sync = this.sync.bind(this);
+      this.syncLogout = this.syncLogout.bind(this);
     }
     componentDidMount() {
-      window.addEventListener('storage', this.sync)
+      window.addEventListener('storage', this.syncLogout)
     }
 
     componentWillUnmount() {
-      window.removeEventListener('storage', this.sync)
+      window.removeEventListener('storage', this.syncLogout)
       window.localStorage.removeItem('logout')
     }
 
-    sync(event) {
+    syncLogout(event) {
       if (event.key === 'logout') {
         console.log('logged out from storage!')
         Router.push('/login')

@@ -5,12 +5,35 @@ import Layout from '../components/layout'
 import auth, { withAuthSync }  from '../utils/auth'
 
 const Profile = withAuthSync((props) => {
-  const { name, login, bio } = props.data
+  const { name, login, bio, avatar_url } = props.data
   return (
     <Layout>
-      <p>Hello, {name}</p>
-      <p>GitHub username: {login}</p>
-      <p>Bio: {bio}</p>
+      <img src={avatar_url} alt="Avatar"/>
+      <h1>{name}</h1>
+      <p className="lead">{login}</p>
+      <p>{bio}</p>
+
+      <style jsx>{`
+        img {
+          max-width: 200px;
+          border-radius: .5rem;
+        }
+
+        h1 {
+          margin-bottom: 0;
+        }
+
+        .lead {
+          margin-top: 0;
+          font-size: 1.5rem;
+          font-weight: 300;
+          color: #666;
+        }
+
+        p {
+          color: #6a737d;
+        }
+      `}</style>
     </Layout>
   )
 })
@@ -19,8 +42,7 @@ Profile.getInitialProps = async (ctx) => {
   const token = auth(ctx)
 
   try {
-    const response = await fetch('https://moor-crush.glitch.me/profile', {
-    // const response = await fetch('https://with-cookie-api.now.sh', {
+    const response = await fetch('https://with-cookie-api.now.sh/profile', {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',

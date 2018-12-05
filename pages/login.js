@@ -26,26 +26,58 @@ class Login extends Component {
   render() {
     return (
       <Layout>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="username">GitHub username:</label>
+        <div className="login">
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="username">GitHub username</label>
 
-          <input
-            type="text"
-            id="username" 
-            name="username"
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
+            <input
+              type="text"
+              id="username" 
+              name="username"
+              value={this.state.username}
+              onChange={this.handleChange}
+            />
 
-          <button type="submit">Login</button>
+            <button type="submit">Login</button>
 
-          <p className="error">
-            {this.state.error && `Error: ${this.state.error}`}
-          </p>
-        </form>
+            <p className={`error ${this.state.error && "show"}`}>
+              {this.state.error && `Error: ${this.state.error}`}
+            </p>
+          </form>
+        </div>
         <style jsx>{`
+          .login {
+            max-width: 340px;
+            margin: 0 auto;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
+          form {
+            display: flex;
+            flex-flow: column;
+          }
+
+          label {
+            font-weight: 600;
+          }
+
+          input {
+            padding: 8px;
+            margin: .3rem 0 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
           .error {
+            margin: .5rem 0 0;
+            display: none;
             color: brown;
+          }
+
+          .error.show {
+            display: block;
           }
         `}</style>
       </Layout>
