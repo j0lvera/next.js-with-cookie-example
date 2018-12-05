@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import Layout from '../components/layout';
-import { login } from '../utils/auth';
+import { Component } from 'react'
+import Layout from '../components/layout'
+import { login } from '../utils/auth'
 
 class Login extends Component {
   constructor(props) {

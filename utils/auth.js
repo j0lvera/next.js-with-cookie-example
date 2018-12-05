@@ -6,16 +6,16 @@ import fetch from 'isomorphic-unfetch'
 
 export const login = async ({ username }) => {
   try {
-    const url = 'https://with-cookie-api.now.sh/login';
+    const url = 'https://with-cookie-api.now.sh/login'
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username }),
-    });
+    })
     if (response.ok) {
       const { token } = await response.json()
       cookie.set('token', token, { expires: 1 })
-      Router.push('/profile');
+      Router.push('/profile')
     } else {
       console.log('Login failed.')
       // https://github.com/developit/unfetch#caveats

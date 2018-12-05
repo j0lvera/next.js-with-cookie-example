@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import Router from 'next/router'
 import fetch from 'isomorphic-unfetch'
 import Layout from '../components/layout'
 import auth, { withAuthSync }  from '../utils/auth'
@@ -51,7 +50,7 @@ Profile.getInitialProps = async (ctx) => {
     })
 
     if (response.ok) {
-      return await response.json();
+      return await response.json()
     } else {
       // https://github.com/developit/unfetch#caveats
       return ctx.res.writeHead(302, { Location: '/login' })

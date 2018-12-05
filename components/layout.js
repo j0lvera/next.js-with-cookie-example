@@ -1,6 +1,5 @@
 import React from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import Header from './header'
 
 const Layout = props => (
@@ -40,4 +39,4 @@ const Layout = props => (
   </React.Fragment>
 )
 
-export default Layout;
+export default Layout
