@@ -3,10 +3,10 @@
   "name": "with-cookie-auth",
   "builds": [
     { "src": "www/package.json", "use": "@now/next" },
-    { "src": "api/index.js", "use": "@now/node-server" }
+    { "src": "api/*.js", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/www/$1" },
-    { "src": "/api/(.*)", "dest": "/api/$1" }
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/www/$1" }
   ]
 }

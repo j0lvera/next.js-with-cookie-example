@@ -43,13 +43,16 @@ Profile.getInitialProps = async ctx => {
   const token = auth(ctx);
 
   try {
-    const response = await fetch(`https://${location.hostname}/api/profile`, {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: JSON.stringify({ token })
+    const response = await fetch(
+      `https://${location.hostname}/api/profile.js`,
+      {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: JSON.stringify({ token })
+        }
       }
-    });
+    );
 
     console.log(response);
 

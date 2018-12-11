@@ -6,7 +6,7 @@ import fetch from "isomorphic-unfetch";
 
 export const login = async ({ username }) => {
   try {
-    const url = `https://${location.hostname}/api/login`;
+    const url = `https://${location.hostname}/api/login.js`;
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
