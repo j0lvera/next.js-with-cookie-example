@@ -1,11 +1,12 @@
-import fetch from "isomorphic-unfetch";
-import Layout from "../components/layout";
-import auth, { withAuthSync } from "../utils/auth";
+import Router from 'next/router'
+import fetch from 'isomorphic-unfetch'
+import Layout from '../components/layout'
+import auth, { withAuthSync } from '../utils/auth'
 
 const Profile = withAuthSync(props => {
-  const { name, login, bio, avatarUrl } = props.data;
+  const { name, login, bio, avatarUrl } = props.data
 
-  console.log(props.data);
+  console.log(props.data)
 
   return (
     <Layout>
@@ -36,36 +37,39 @@ const Profile = withAuthSync(props => {
         }
       `}</style>
     </Layout>
-  );
-});
+  )
+})
 
 Profile.getInitialProps = async ctx => {
-  const token = auth(ctx);
+  const token = auth(ctx)
+  const apiUrl = process.browser
+    ? `https://${window.location.host}/api/profile.js`
+    : `https://${ctx.req.headers.host}/api/profile.js`
+
+  const redirectOnError = () =>
+    process.browser
+      ? Router.push('/login')
+      : ctx.res.writeHead(301, { Location: '/login' })
 
   try {
-    const response = await fetch(
-      `https://${location.hostname}/api/profile.js`,
-      {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: JSON.stringify({ token })
-        }
+    const response = await fetch(apiUrl, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: JSON.stringify({ token })
       }
-    );
-
-    console.log(response);
+    })
 
     if (response.ok) {
-      return await response.json();
+      return await response.json()
     } else {
       // https://github.com/developit/unfetch#caveats
-      return ctx.res.writeHead(302, { Location: "/login" });
+      return redirectOnError()
     }
   } catch (error) {
     // Implementation or Network error
-    throw new Error(error);
+    return redirectOnError()
   }
-};
+}
 
-export default Profile;
+export default Profile

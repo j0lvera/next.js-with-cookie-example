@@ -1,22 +1,23 @@
-const { json, send, createError } = require("micro");
+const { json, send, createError, run } = require('micro')
+const fetch = require('isomorphic-unfetch')
 
 const login = async (req, res) => {
-  const { username } = await json(req);
-  const url = `https://api.github.com/users/${username}`;
+  const { username } = await json(req)
+  const url = `https://api.github.com/users/${username}`
 
-  console.log(url);
+  console.log(url)
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
     if (response.ok) {
-      const js = await response.json();
-      send(res, 200, js);
+      const { id } = await response.json()
+      send(res, 200, { token: id })
     } else {
-      send(res, response.status, response.statusText);
+      send(res, response.status, response.statusText)
     }
   } catch (error) {
-    throw createError(error.statusCode, error.statusText);
+    throw createError(error.statusCode, error.statusText)
   }
-};
+}
 
-module.exports = login;
+module.exports = (req, res) => run(req, res, login)

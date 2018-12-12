@@ -3,6 +3,14 @@ import Layout from '../components/layout'
 import { login } from '../utils/auth'
 
 class Login extends Component {
+  static getInitialProps({ req }) {
+    const apiUrl = process.browser
+      ? `https://${window.location.host}/api/login.js`
+      : `https://${req.headers.host}/api/login.js`
+
+    return { apiUrl }
+  }
+
   constructor(props) {
     super(props)
 
@@ -18,9 +26,10 @@ class Login extends Component {
   async handleSubmit(event) {
     event.preventDefault()
     const username = this.state.username
-    login({ username })
-      .catch(() =>
-        this.setState({ error: 'Login failed.' }))
+    const url = this.props.apiUrl
+    login({ username, url }).catch(() =>
+      this.setState({ error: 'Login failed.' })
+    )
   }
 
   render() {
@@ -32,7 +41,7 @@ class Login extends Component {
 
             <input
               type="text"
-              id="username" 
+              id="username"
               name="username"
               value={this.state.username}
               onChange={this.handleChange}
@@ -40,7 +49,7 @@ class Login extends Component {
 
             <button type="submit">Login</button>
 
-            <p className={`error ${this.state.error && "show"}`}>
+            <p className={`error ${this.state.error && 'show'}`}>
               {this.state.error && `Error: ${this.state.error}`}
             </p>
           </form>
@@ -65,13 +74,13 @@ class Login extends Component {
 
           input {
             padding: 8px;
-            margin: .3rem 0 1rem;
+            margin: 0.3rem 0 1rem;
             border: 1px solid #ccc;
             border-radius: 4px;
           }
 
           .error {
-            margin: .5rem 0 0;
+            margin: 0.5rem 0 0;
             display: none;
             color: brown;
           }
