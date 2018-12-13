@@ -6,8 +6,6 @@ import auth, { withAuthSync } from '../utils/auth'
 const Profile = withAuthSync(props => {
   const { name, login, bio, avatarUrl } = props.data
 
-  console.log(props.data)
-
   return (
     <Layout>
       <img src={avatarUrl} alt="Avatar" />
@@ -53,11 +51,7 @@ Profile.getInitialProps = async ctx => {
 
   try {
     const response = await fetch(apiUrl, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: JSON.stringify({ token })
-      }
+      credentials: 'include'
     })
 
     if (response.ok) {
