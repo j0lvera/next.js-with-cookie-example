@@ -1,12 +1,14 @@
 import { Component } from 'react'
+import Router from 'next/router'
 import Layout from '../components/layout'
-import { login } from '../utils/auth'
+import { login } from 'next-authentication'
 
 class Login extends Component {
   static getInitialProps({ req }) {
-    const apiUrl = process.browser
-      ? `https://${window.location.host}/api/login.js`
-      : `https://${req.headers.host}/api/login.js`
+    const apiUrl = 'https://with-cookie-api.now.sh/login'
+    // const apiUrl = process.browser
+    //   ? `https://${window.location.host}/api/login.js`
+    //   : `https://${req.headers.host}/api/login.js`
 
     return { apiUrl }
   }
@@ -27,9 +29,39 @@ class Login extends Component {
     event.preventDefault()
     const username = this.state.username
     const url = this.props.apiUrl
-    login({ username, url }).catch(() =>
-      this.setState({ error: 'Login failed.' })
-    )
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      })
+      if (response.ok) {
+        const { token } = await response.json()
+
+        const loginOptions = {
+          token,
+          cookieOptions: { expires: 1 },
+          callback: () => Router.push('/profile')
+        }
+
+        login(loginOptions)
+      } else {
+        console.log('Login failed.')
+        // https://github.com/developit/unfetch#caveats
+        let error = new Error(response.statusText)
+        error.response = response
+        this.setState({ error: 'Login failed. (sever error)' })
+        return Promise.reject(error)
+      }
+    } catch (error) {
+      console.error(
+        'You have an error in your code or there are Network issues.',
+        error
+      )
+      this.setState({ error: 'Login failed. (implementation error)' })
+      throw new Error(error)
+    }
   }
 
   render() {

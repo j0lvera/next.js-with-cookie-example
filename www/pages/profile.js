@@ -1,9 +1,9 @@
 import Router from 'next/router'
 import fetch from 'isomorphic-unfetch'
 import Layout from '../components/layout'
-import auth, { withAuthSync } from '../utils/auth'
+import withAuth, { getCookie } from 'next-authentication'
 
-const Profile = withAuthSync(props => {
+const Profile = props => {
   const { name, login, bio, avatarUrl } = props.data
 
   return (
@@ -36,22 +36,30 @@ const Profile = withAuthSync(props => {
       `}</style>
     </Layout>
   )
-})
+}
 
 Profile.getInitialProps = async ctx => {
-  const token = auth(ctx)
-  const apiUrl = process.browser
-    ? `https://${window.location.host}/api/profile.js`
-    : `https://${ctx.req.headers.host}/api/profile.js`
+  const { token } = getCookie(ctx)
 
-  const redirectOnError = () =>
-    process.browser
-      ? Router.push('/login')
-      : ctx.res.writeHead(301, { Location: '/login' })
+  console.log('token:', token)
+
+  const apiUrl = 'https://with-cookie-api.now.sh/profile'
+  // const apiUrl = process.browser
+  //   ? `https://${window.location.host}/api/profile.js`
+  //   : `https://${ctx.req.headers.host}/api/profile.js`
+
+  const redirectOnError = () => console.log('error')
+  // process.browser
+  //   ? Router.push('/login')
+  //   : ctx.res.writeHead(301, { Location: '/login' })
 
   try {
     const response = await fetch(apiUrl, {
-      credentials: 'include'
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: JSON.stringify({ token })
+      }
     })
 
     if (response.ok) {
@@ -66,4 +74,8 @@ Profile.getInitialProps = async ctx => {
   }
 }
 
-export default Profile
+const authOptions = {
+  callback: () => Router.push('/login'),
+  serverRedirect: '/login'
+}
+export default withAuth(authOptions)(Profile)

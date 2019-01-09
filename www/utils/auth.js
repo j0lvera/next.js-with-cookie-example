@@ -2,83 +2,73 @@ import { Component } from 'react'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
-import fetch from 'isomorphic-unfetch'
 
-export const login = async ({ username, url }) => {
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username })
-    })
-    if (response.ok) {
-      const { token } = await response.json()
-      cookie.set('token', token, { expires: 1 })
-      Router.push('/profile')
-    } else {
-      console.log('Login failed.')
-      // https://github.com/developit/unfetch#caveats
-      let error = new Error(response.statusText)
-      error.response = response
-      return Promise.reject(error)
-    }
-  } catch (error) {
-    console.error(
-      'You have an error in your code or there are Network issues.',
-      error
-    )
-    throw new Error(error)
-  }
+export const login = ({ token, cookieOptions, redirect }) => {
+  cookie.set('token', token, cookieOptions)
+  Router.push(redirect)
 }
 
-export const logout = () => {
+export const logout = redirect => {
   cookie.remove('token')
   // to support logging out from all windows
   window.localStorage.setItem('logout', Date.now())
-  Router.push('/login')
+  Router.push(redirect)
 }
 
-export function withAuthSync(WrappedComponent) {
-  return class extends Component {
-    constructor(props) {
-      super(props)
+export default function withAuth({ redirect }) {
+  return function withAuthFactory(WrappedComponent) {
+    return class Auth extends Component {
+      static async getInitialProps(context) {
+        const token = auth({ context, redirect })
 
-      this.syncLogout = this.syncLogout.bind(this)
-    }
-    componentDidMount() {
-      window.addEventListener('storage', this.syncLogout)
-    }
+        const componentProps =
+          WrappedComponent.getInitialProps &&
+          (await WrappedComponent.getInitialProps(context))
 
-    componentWillUnmount() {
-      window.removeEventListener('storage', this.syncLogout)
-      window.localStorage.removeItem('logout')
-    }
-
-    syncLogout(event) {
-      if (event.key === 'logout') {
-        console.log('logged out from storage!')
-        Router.push('/login')
+        return { ...componentProps, token }
       }
-    }
 
-    render() {
-      return <WrappedComponent {...this.props} />
+      constructor(props) {
+        super(props)
+        this.syncLogout = this.syncLogout.bind(this)
+      }
+
+      componentDidMount() {
+        window.addEventListener('storage', this.syncLogout)
+      }
+
+      componentWillUnmount() {
+        window.removeEventListener('storage', this.syncLogout)
+        window.localStorage.removeItem('logout')
+      }
+
+      syncLogout(event) {
+        if (event.key === 'logout') {
+          Router.push(redirect)
+        }
+      }
+
+      render() {
+        return <WrappedComponent {...this.props} />
+      }
     }
   }
 }
 
-export default ctx => {
-  const { token } = nextCookie(ctx)
+export const auth = ({ context, redirect }) => {
+  const { token } = nextCookie(context)
 
-  if (ctx.req && !token) {
-    ctx.res.writeHead(302, { Location: '/login' })
-    ctx.res.end()
+  if (context.req && !token) {
+    context.res.writeHead(302, { Location: redirect })
+    context.res.end()
     return
   }
 
   if (!token) {
-    Router.push('/login')
+    Router.push(redirect)
   }
 
   return token
 }
+
+export const getCookie = nextCookie
