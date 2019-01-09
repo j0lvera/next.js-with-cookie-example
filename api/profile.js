@@ -1,13 +1,13 @@
 const { send, createError, run } = require('micro')
-const { parse } = require('cookie')
 const fetch = require('isomorphic-unfetch')
 
 const profile = async (req, res) => {
-  if (!('cookie' in req.headers)) {
-    throw createError(401, 'Not Cookie found in request')
+  if (!('authorization' in req.headers)) {
+    throw createError(401, 'Authorization header missing')
   }
 
-  const { token } = parse(req.headers.cookie)
+  const auth = await req.headers.authorization
+  const { token } = JSON.parse(auth)
   const url = `https://api.github.com/user/${token}`
 
   try {
