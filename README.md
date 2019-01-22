@@ -28,8 +28,8 @@ The repository is setup as a [monorepo](https://zeit.co/examples/monorepo/) so y
 
 These files make it easier to run the application locally and aren't needed for production:
 
-- `/api/index.js` runs the API server on port `3001` that imports the `login` and `profile` microservices.
-- `/www/server.js` runs the Next.js app with a custom server proxying the API requests to the API server with port`3001`. We use this so we don't modify the logic on the application and we don't have to deal with CORS if we use domains while testing.
+- `/api/index.js` runs the API server on port `3001` and imports the `login` and `profile` microservices.
+- `/www/server.js` runs the Next.js app with a custom server proxying the authentication requests to the API server. We use this so we don't modify the logic on the application and we don't have to deal with CORS if we use domains while testing.
 
 Install and run the API server:
 
@@ -46,6 +46,8 @@ cd ../www
 npm install
 npm run dev
 ```
+
+### Deploy
 
 Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
