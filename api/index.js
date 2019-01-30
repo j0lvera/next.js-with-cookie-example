@@ -1,4 +1,4 @@
-const { run, send } = require('micro')
+const { send } = require('micro')
 const login = require('./login')
 const profile = require('./profile')
 
@@ -17,4 +17,4 @@ const dev = async (req, res) => {
   }
 }
 
-exports.default = (req, res) => run(req, res, dev)
+module.exports = dev
