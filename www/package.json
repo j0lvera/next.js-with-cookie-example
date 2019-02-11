@@ -1,5 +1,5 @@
 {
-  "name": "with-cookie-auth-frontend",
+  "name": "with-cookie-auth",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",

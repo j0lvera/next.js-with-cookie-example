@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "with-cookie-auth",
-  "alias": ["with-cookie-auth.now.sh"],
   "builds": [
     { "src": "www/package.json", "use": "@now/next" },
     { "src": "api/*.js", "use": "@now/node" }
