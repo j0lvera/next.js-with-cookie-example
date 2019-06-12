@@ -1,3 +1,4 @@
+import React from 'react';
 import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import nextCookie from "next-cookies";
@@ -41,9 +42,11 @@ const Profile = props => {
 
 Profile.getInitialProps = async ctx => {
   const { token } = nextCookie(ctx);
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+  const apiUrl = process.browser
+      ? `${protocol}://${window.location.host}/api/profile`
 
-  const apiUrl = "/api/profile";
+      : `${protocol}://${ctx.req.headers.host}/api/profile`;
 
   const redirectOnError = () =>
     process.browser
