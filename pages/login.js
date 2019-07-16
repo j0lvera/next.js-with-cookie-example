@@ -9,6 +9,7 @@ function Login() {
   async function handleSubmit(event) {
     event.preventDefault()
     setUserData(Object.assign({}, userData, { error: '' }))
+
     const username = userData.username
     const url = '/api/login'
 
@@ -19,7 +20,7 @@ function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username })
       })
-      if (response.ok) {
+      if (response.status == 200) {
         const { token } = await response.json()
         await login({ token })
       } else {
